@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "173812657208",
+    "project_id": "max-chat-007",
+    "storage_bucket": "max-chat-007.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:173812657208:android:ae6cd2c3177dc44f3c0acd",
+        "android_client_info": {
+          "package_name": "com.example.maxchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "173812657208-220elg6nv81lh4pg7mep4kh6ces54m7d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCq5JhcDMg1-fUAaxadCO9dKfX9OWIUoYA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "173812657208-220elg6nv81lh4pg7mep4kh6ces54m7d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

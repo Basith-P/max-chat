@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+import 'config/theme/custom_theme.dart';
 import 'config/routes.dart' as route;
 
 void main() async {
@@ -16,11 +17,10 @@ class MaxChat extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Max Chat',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: CustomTheme.lightTheme,
+      debugShowCheckedModeBanner: false,
       onGenerateRoute: route.controller,
-      initialRoute: route.chatPage,
+      initialRoute: route.authPage,
     );
   }
 }

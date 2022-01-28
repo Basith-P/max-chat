@@ -37,9 +37,9 @@ class ChatPage extends StatelessWidget {
         ],
       ),
       body: Column(
-        children: const [
+        children: [
           Expanded(child: Messages()),
-          NewChat(),
+          const NewChat(),
         ],
       ),
     );

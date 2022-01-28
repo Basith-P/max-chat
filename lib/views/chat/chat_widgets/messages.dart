@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'chat_bubble.dart';
 
 class Messages extends StatelessWidget {
-  const Messages({Key? key}) : super(key: key);
+  Messages({Key? key}) : super(key: key);
+
+  final _user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +28,11 @@ class Messages extends StatelessWidget {
           return ListView.builder(
             reverse: true,
             itemCount: chats.length,
-            itemBuilder: (ctx, i) => ChatBubble(chats[i]['text']),
+            itemBuilder: (ctx, i) => ChatBubble(
+              chats[i]['text'],
+              chats[i]['userId'] == _user!.uid,
+              key: ValueKey(chats[i].id),
+            ),
           );
         },
       ),

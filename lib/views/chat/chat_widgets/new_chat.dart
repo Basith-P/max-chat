@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class NewChat extends StatefulWidget {
   const NewChat({Key? key}) : super(key: key);
@@ -10,6 +11,7 @@ class NewChat extends StatefulWidget {
 
 class _NewChatState extends State<NewChat> {
   final _firestore = FirebaseFirestore.instance;
+  final _user = FirebaseAuth.instance.currentUser;
   final _chatController = TextEditingController();
   var _enteredMsg = '';
 
@@ -17,6 +19,7 @@ class _NewChatState extends State<NewChat> {
     _firestore.collection('chat').add({
       'text': _chatController.text,
       'createdAt': Timestamp.now(),
+      'userId': _user!.uid,
     });
     setState(() {
       _enteredMsg = '';

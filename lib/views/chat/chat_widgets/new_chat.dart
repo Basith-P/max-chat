@@ -15,11 +15,13 @@ class _NewChatState extends State<NewChat> {
   final _chatController = TextEditingController();
   var _enteredMsg = '';
 
-  void _sendChat() {
+  void _sendChat() async {
+    final _userData = await FirebaseFirestore.instance.collection('users').doc(_user!.uid).get();
     _firestore.collection('chat').add({
       'text': _chatController.text,
       'createdAt': Timestamp.now(),
       'userId': _user!.uid,
+      'username': _userData['username'],
     });
     setState(() {
       _enteredMsg = '';

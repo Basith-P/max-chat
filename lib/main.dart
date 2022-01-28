@@ -20,12 +20,15 @@ class MaxChat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Max Chat',
-      theme: CustomTheme.lightTheme,
-      debugShowCheckedModeBanner: false,
-      onGenerateRoute: route.controller,
-      initialRoute: route.initialPage,
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: MaterialApp(
+        title: 'Max Chat',
+        theme: CustomTheme.lightTheme,
+        debugShowCheckedModeBanner: false,
+        onGenerateRoute: route.controller,
+        initialRoute: route.initialPage,
+      ),
     );
   }
 }

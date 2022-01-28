@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'auth_widgets/auth_form.dart';
 
@@ -13,6 +13,8 @@ class AuthPage extends StatefulWidget {
 
 class _AuthPageState extends State<AuthPage> {
   final _auth = FirebaseAuth.instance;
+  var _isLoading = false;
+
   void _submitAuthForm(
     String email,
     String username,
@@ -22,6 +24,9 @@ class _AuthPageState extends State<AuthPage> {
   ) async {
     var _snackbar = ScaffoldMessenger.of(ctx);
     try {
+      setState(() {
+        _isLoading = true;
+      });
       UserCredential user;
       if (wantLogin) {
         user = await _auth.signInWithEmailAndPassword(email: email, password: passwd);
@@ -29,6 +34,10 @@ class _AuthPageState extends State<AuthPage> {
         _snackbar.showSnackBar(const SnackBar(content: Text('Logged in successfully')));
       } else {
         user = await _auth.createUserWithEmailAndPassword(email: email, password: passwd);
+        await FirebaseFirestore.instance.collection('users').doc(user.user!.uid).set({
+          'username': username,
+          'email': email,
+        });
         _snackbar.hideCurrentSnackBar();
         _snackbar.showSnackBar(const SnackBar(content: Text('Registered successfully')));
       }
@@ -39,6 +48,10 @@ class _AuthPageState extends State<AuthPage> {
       _snackbar.showSnackBar(SnackBar(content: Text(msg)));
     } catch (e) {
       print(e);
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -46,7 +59,7 @@ class _AuthPageState extends State<AuthPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
-      body: AuthForm(_submitAuthForm),
+      body: AuthForm(_submitAuthForm, _isLoading),
     );
   }
 }

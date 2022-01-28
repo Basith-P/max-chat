@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AuthForm extends StatefulWidget {
-  const AuthForm(this._submitFn, {Key? key}) : super(key: key);
+  const AuthForm(this._submitFn, this.isLoading, {Key? key}) : super(key: key);
 
   final void Function(
     String email,
@@ -10,6 +10,7 @@ class AuthForm extends StatefulWidget {
     bool wantLogin,
     BuildContext ctx,
   ) _submitFn;
+  final bool isLoading;
 
   @override
   _AuthFormState createState() => _AuthFormState();
@@ -48,6 +49,7 @@ class _AuthFormState extends State<AuthForm> {
             key: _formKey,
             child: Column(
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 TextFormField(
                   key: const ValueKey('email'),
@@ -59,7 +61,7 @@ class _AuthFormState extends State<AuthForm> {
                       return "Please Enter a valid email";
                     }
                   },
-                  onSaved: (value) => _email = value!,
+                  onSaved: (value) => _email = value!.trim(),
                 ),
                 if (!_wantLogin)
                   TextFormField(
@@ -74,7 +76,7 @@ class _AuthFormState extends State<AuthForm> {
                         return "username should be at least 3 Characters long";
                       }
                     },
-                    onSaved: (value) => _username = value!,
+                    onSaved: (value) => _username = value!.trim(),
                   ),
                 TextFormField(
                   key: const ValueKey('passwd'),
@@ -88,12 +90,24 @@ class _AuthFormState extends State<AuthForm> {
                       return "Password should be at least 6 Characters long";
                     }
                   },
-                  onSaved: (value) => _passwd = value!,
+                  onSaved: (value) => _passwd = value!.trim(),
                 ),
                 const SizedBox(height: 30),
                 ElevatedButton(
                   onPressed: _submitForm,
-                  child: Text(_wantLogin ? 'Login' : 'Sign up'),
+                  child: Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: widget.isLoading
+                        ? const SizedBox(
+                            height: 19,
+                            width: 19,
+                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                          )
+                        : Text(
+                            _wantLogin ? 'Log in' : 'Sign up',
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                  ),
                 ),
                 TextButton(
                   onPressed: () {

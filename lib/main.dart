@@ -25,7 +25,7 @@ class MaxChat extends StatelessWidget {
       theme: CustomTheme.lightTheme,
       debugShowCheckedModeBanner: false,
       onGenerateRoute: route.controller,
-      initialRoute: route.authPage,
+      initialRoute: route.initialPage,
     );
   }
 }

@@ -6,22 +6,29 @@ class Messages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('chat').snapshots(),
-      builder: (ctx, AsyncSnapshot snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator(strokeWidth: 2));
-        } else if (snapshot.hasError) {
-          return Center(child: Text(snapshot.error.toString()));
-        }
-        final chats = snapshot.data.docs;
-        return ListView.builder(
-          itemCount: chats.length,
-          itemBuilder: (ctx, i) => Text(
-            chats[0]['text'],
-          ),
-        );
-      },
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection('chat')
+            .orderBy('createdAt', descending: true)
+            .snapshots(),
+        builder: (ctx, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator(strokeWidth: 2));
+          } else if (snapshot.hasError) {
+            return Center(child: Text(snapshot.error.toString()));
+          }
+          final chats = snapshot.data.docs;
+          return ListView.builder(
+            reverse: true,
+            itemCount: chats.length,
+            itemBuilder: (ctx, i) => Text(
+              chats[i]['text'],
+            ),
+          );
+        },
+      ),
     );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../views/chat_page.dart';
+import '../views/chat/chat_page.dart';
 import '../views/auth/auth_page.dart';
 
 const String chatPage = 'chat';

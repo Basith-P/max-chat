@@ -37,7 +37,10 @@ class _NewChatState extends State<NewChat> {
                 hintText: 'Type something...',
                 fillColor: Colors.pink[50],
                 filled: true,
-                border: InputBorder.none,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  borderSide: BorderSide.none,
+                ),
               ),
               controller: _chatController,
               onChanged: (value) {
@@ -47,13 +50,17 @@ class _NewChatState extends State<NewChat> {
               },
             ),
           ),
+          const SizedBox(width: 8),
           _enteredMsg.trim().isEmpty
               ? Container()
-              : IconButton(
-                  color: Theme.of(context).primaryColor,
-                  onPressed: _sendChat,
-                  icon: Icon(
-                    Icons.send_rounded,
+              : CircleAvatar(
+                  radius: 28,
+                  backgroundColor: Theme.of(context).primaryColor,
+                  child: IconButton(
+                    onPressed: _sendChat,
+                    icon: const Icon(
+                      Icons.send_rounded,
+                    ),
                   ),
                 ),
         ],

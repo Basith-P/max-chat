@@ -27,9 +27,10 @@ class _AuthFormState extends State<AuthForm> {
   var _email = '';
   var _username = '';
   var _passwd = '';
+  var _isPickingImage = false;
 
   XFile? imageFile;
-  File? _pickedImage;
+  File _pickedImage = File('path');
 
   void _pickImage() {
     showDialog(
@@ -55,7 +56,14 @@ class _AuthFormState extends State<AuthForm> {
               ),
               onTap: () async {
                 Navigator.of(ctx).pop();
-                imageFile = await ImagePicker().pickImage(source: ImageSource.camera);
+                setState(() {
+                  _isPickingImage = true;
+                });
+                imageFile = await ImagePicker().pickImage(
+                  source: ImageSource.camera,
+                  maxWidth: 400,
+                  imageQuality: 50,
+                );
               },
             ),
             InkWell(
@@ -72,21 +80,28 @@ class _AuthFormState extends State<AuthForm> {
               ),
               onTap: () async {
                 Navigator.of(ctx).pop();
-                imageFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+                setState(() {
+                  _isPickingImage = true;
+                });
+                imageFile = await ImagePicker().pickImage(
+                  source: ImageSource.gallery,
+                  maxWidth: 400,
+                  imageQuality: 50,
+                );
               },
             ),
           ],
         ),
       ),
     );
-
     setState(() {
       _pickedImage = File(imageFile!.path);
+      _isPickingImage = false;
     });
   }
 
   void _submitForm() {
-    if (_pickedImage == null && !_wantLogin) {
+    if (_pickedImage.path == 'path' && !_wantLogin) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Please pick an image..!'),
@@ -102,7 +117,7 @@ class _AuthFormState extends State<AuthForm> {
         _email,
         _username,
         _passwd,
-        _pickedImage!,
+        _pickedImage,
         _wantLogin,
         context,
       );
@@ -125,17 +140,23 @@ class _AuthFormState extends State<AuthForm> {
                 if (!_wantLogin)
                   CircleAvatar(
                     radius: 50,
-                    backgroundImage: _pickedImage != null ? FileImage(_pickedImage!) : null,
+                    backgroundImage: _pickedImage.path == 'path' ? FileImage(_pickedImage) : null,
                     child: CircleAvatar(
                       backgroundColor: Colors.black26,
                       radius: 50,
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.camera_alt_outlined,
-                          color: Colors.white,
-                        ),
-                        onPressed: _pickImage,
-                      ),
+                      child: _isPickingImage
+                          ? const SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                            )
+                          : IconButton(
+                              icon: const Icon(
+                                Icons.camera_alt_outlined,
+                                color: Colors.white,
+                              ),
+                              onPressed: _pickImage,
+                            ),
                     ),
                   ),
                 TextFormField(

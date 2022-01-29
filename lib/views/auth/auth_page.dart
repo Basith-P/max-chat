@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 import 'auth_widgets/auth_form.dart';
 
@@ -37,9 +38,14 @@ class _AuthPageState extends State<AuthPage> {
         _snackbar.showSnackBar(const SnackBar(content: Text('Logged in successfully')));
       } else {
         user = await _auth.createUserWithEmailAndPassword(email: email, password: passwd);
+
+        final ref = FirebaseStorage.instance.ref('userImages').child(user.user!.uid + '.jpg');
+        final url = await ref.putFile(image).whenComplete(() => ref.getDownloadURL());
+
         await FirebaseFirestore.instance.collection('users').doc(user.user!.uid).set({
           'username': username,
           'email': email,
+          'imageUrl': url,
         });
         _snackbar.hideCurrentSnackBar();
         _snackbar.showSnackBar(const SnackBar(content: Text('Registered successfully')));

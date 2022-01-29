@@ -34,19 +34,42 @@ class _AuthFormState extends State<AuthForm> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Pick an image'),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
         content: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            IconButton(
-              icon: const Icon(Icons.camera_alt_outlined),
-              onPressed: () async {
+            InkWell(
+              borderRadius: BorderRadius.circular(16),
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Icon(Icons.camera_alt_outlined),
+                    Text('Camera'),
+                  ],
+                ),
+              ),
+              onTap: () async {
                 Navigator.of(ctx).pop();
-                imageFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+                imageFile = await ImagePicker().pickImage(source: ImageSource.camera);
               },
             ),
-            IconButton(
-              icon: const Icon(Icons.photo_library_outlined),
-              onPressed: () async {
+            InkWell(
+              borderRadius: BorderRadius.circular(16),
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Icon(Icons.photo_library_outlined),
+                    Text('Gallery'),
+                  ],
+                ),
+              ),
+              onTap: () async {
                 Navigator.of(ctx).pop();
                 imageFile = await ImagePicker().pickImage(source: ImageSource.gallery);
               },
@@ -55,6 +78,7 @@ class _AuthFormState extends State<AuthForm> {
         ),
       ),
     );
+
     setState(() {
       _pickedImage = File(imageFile!.path);
     });
@@ -98,14 +122,18 @@ class _AuthFormState extends State<AuthForm> {
               children: [
                 if (!_wantLogin)
                   CircleAvatar(
-                    backgroundColor: Colors.black26,
                     radius: 50,
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.camera_alt_outlined,
-                        color: Colors.white,
+                    backgroundImage: _pickedImage != null ? FileImage(_pickedImage!) : null,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.black26,
+                      radius: 50,
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.camera_alt_outlined,
+                          color: Colors.white,
+                        ),
+                        onPressed: _pickImage,
                       ),
-                      onPressed: _pickImage,
                     ),
                   ),
                 TextFormField(

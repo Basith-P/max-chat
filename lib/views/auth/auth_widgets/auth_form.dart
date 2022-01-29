@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AuthForm extends StatefulWidget {
   const AuthForm(this._submitFn, this.isLoading, {Key? key}) : super(key: key);
@@ -24,7 +27,49 @@ class _AuthFormState extends State<AuthForm> {
   var _username = '';
   var _passwd = '';
 
+  XFile? imageFile;
+  File? _pickedImage;
+
+  void _pickImage() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Pick an image'),
+        content: Row(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.camera_alt_outlined),
+              onPressed: () async {
+                Navigator.of(ctx).pop();
+                imageFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.photo_library_outlined),
+              onPressed: () async {
+                Navigator.of(ctx).pop();
+                imageFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+    setState(() {
+      _pickedImage = File(imageFile!.path);
+    });
+  }
+
   void _submitForm() {
+    if (_pickedImage == null && !_wantLogin) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please pick an image..!'),
+        ),
+      );
+      return;
+    }
+
     if (_formKey.currentState!.validate()) {
       FocusScope.of(context).unfocus();
       _formKey.currentState!.save();
@@ -51,6 +96,18 @@ class _AuthFormState extends State<AuthForm> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                if (!_wantLogin)
+                  CircleAvatar(
+                    backgroundColor: Colors.black26,
+                    radius: 50,
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.camera_alt_outlined,
+                        color: Colors.white,
+                      ),
+                      onPressed: _pickImage,
+                    ),
+                  ),
                 TextFormField(
                   key: const ValueKey('email'),
                   decoration: const InputDecoration(labelText: 'Email'),
